@@ -1,0 +1,47 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+}
+
+ext {
+    jacksonVersion = "2.11.0"
+    awssdkVersion = "2.13.56"
+    log4jVersion = "2.13.3"
+    
+    messageAttributesExampleMainClass = "com.javacodegeeks.examples.aws.demo.MessageAttributesExample"
+}
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+    compile "org.slf4j:slf4j-simple:1.7.9"
+    compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion") {
+        exclude module: "jackson-core"
+    }
+
+    compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
+   
+    implementation platform("software.amazon.awssdk:bom:$awssdkVersion")
+    implementation "software.amazon.awssdk:sqs"
+    implementation "software.amazon.awssdk:sns"
+}
+
+task messageAttributesExample(type: JavaExec) {
+    description = "Run Message Attributes Example"
+    group = "Execution"
+    classpath = sourceSets.main.runtimeClasspath
+    main = messageAttributesExampleMainClass
+    standardInput = System.in
+}
